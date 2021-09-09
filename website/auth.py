@@ -2,6 +2,8 @@ from website.models import User
 from flask import Blueprint, render_template, request, flash, redirect, url_for
 from .models import User
 from . import db
+# related to user mixin
+from flask_login import login_user, login_required, logout_user, current_user
 # never store passwords in plain text
 from werkzeug.security import generate_password_hash, check_password_hash
 # hash is that no have inverse(like an inverse of a funcion)
@@ -21,8 +23,9 @@ def login():
         if user:
             if check_password_hash(user.password, password):
                 flash('Logged in succesfully!', category='success')
-                return redirect(url_for('views.home'))          
-                
+                login_user(user, remember=True)#user is stored in the flask sesion
+                return redirect(url_for('views.home'))
+
             else:
                 flash('Incorrect password, try again :(', category='error')
         else:
@@ -31,8 +34,10 @@ def login():
 
 
 @auth.route('/logout')
+@login_required # user should be log in
 def logout():
-    return '<p>this will be a logout template</p>'
+    logout_user()
+    return redirect(url_for('auth.login'))
 
 
 @auth.route('/sign-up', methods=['GET', 'POST'])
@@ -64,6 +69,8 @@ def sign_up():
             db.session.add(new_user)
             # commit
             db.session.commit()
+            login_user(user, remember=True)#user is stored in the flask sesion
+          
             flash('account created!', category='success')
             return redirect(url_for('views.home'))
 
