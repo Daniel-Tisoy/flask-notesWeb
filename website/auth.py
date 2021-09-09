@@ -1,11 +1,19 @@
-from flask import Blueprint, render_template, request, flash
-
+from website.models import User
+from flask import Blueprint, render_template, request, flash, redirect, url_for
+from .models import User
+from . import db
+# never store passwords in plain text
+from werkzeug.security import generate_password_hash, check_password_hash
+# hash is that no have inverse(like an inverse of a funcion)
+# given f:x -> y you can't get f'(f'=?)
+# so you can only check, given a password, this is equals to hashed password
 auth = Blueprint('auth', __name__)
 
 
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
     data = request.form
+    #print(data)
     return render_template('login.html')
 
 
@@ -34,5 +42,13 @@ def sign_up():
             flash('password must be at least 8 characters', category='error')
         else:
             #add user to database
+            new_user = User(email=email, first_name=first_name, password=generate_password_hash(password1, method='sha256'))
+
+            #add to database
+            db.session.add(new_user)
+            #commit
+            db.session.commit()
             flash('account created!', category='success')
+            return redirect(url_for('views.home'))
+
     return render_template('sign_up.html')
