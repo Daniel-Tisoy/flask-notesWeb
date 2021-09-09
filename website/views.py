@@ -8,4 +8,4 @@ views = Blueprint('views', __name__)
 @views.route('/')
 @login_required #the home is aviable for logged users
 def home():
-    return render_template('home.html')
+    return render_template('home.html', user=current_user)
