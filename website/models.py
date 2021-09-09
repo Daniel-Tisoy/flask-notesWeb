@@ -8,7 +8,7 @@ class Note(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     data = db.Column(db.String(10000))
     #func.now is the current dayTime
-    date = db.Column(db.DateTime(timezone=True), default=func.now)
+    date = db.Column(db. DateTime(timezone=True), default=func.now())
 
     #foreign key
     #one to many relationship
