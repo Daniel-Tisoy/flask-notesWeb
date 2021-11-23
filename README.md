@@ -1,4 +1,7 @@
 # flask_notes_website
+
+- Creditos: [Tech with Tim](https://www.youtube.com/c/TechWithTim) 
+
 ## app deployed :
 
 ### login:
